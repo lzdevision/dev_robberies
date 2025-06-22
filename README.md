@@ -98,7 +98,7 @@ CREATE TABLE `robberies` (
 ## Desenvolvimento
 
 Desenvolvido por [**@lzdevision**](https://github.com/lzdevision), Discord: lzdv_  
-❤️ Para suporte ou colaboração, entre em contato via GitHub ou Discord.
+❤️ Para suporte ou colaboração, entre em contato via Discord.
 
 ## 📜 Licença
 
