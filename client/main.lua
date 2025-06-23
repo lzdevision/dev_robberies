@@ -1,3 +1,9 @@
+spawnedPropsList = spawnedPropsList or {}
+spawnedTargets = spawnedTargets or {}
+robberyData = robberyData or {}
+robberyCooldowns = robberyCooldowns or {}
+currentPreview = currentPreview or nil
+
 RegisterNetEvent('onClientResourceStart', function(resource)
     if resource == GetCurrentResourceName() then
         Wait(500)
@@ -50,7 +56,7 @@ function startRobbery(robbery)
     end
 
     for _, drop in ipairs(robbery.drops) do
-        TriggerServerEvent('dev_robbery:giveReward', drop.name, drop.amount)
+        TriggerServerEvent('dev_robbery:giveReward', drop.name, drop.amount, robbery.label)
     end
 
     robberyCooldowns[label] = GetGameTimer() + cooldownTime

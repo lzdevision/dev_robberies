@@ -6,14 +6,14 @@ local robberies = {}
 -- Carrega os roubos do banco quando o resource inicia
 AddEventHandler('onResourceStart', function(res)
     if res == GetCurrentResourceName() then
-        db.loadRobberies(function(results)
+        exports.oxmysql:query('SELECT * FROM ??', { Config.RobberyTable }, function(results)
             for _, r in pairs(results) do
                 r.coords = json.decode(r.coords)
                 r.propOffset = json.decode(r.propOffset)
                 r.anim = json.decode(r.anim)
                 r.drops = json.decode(r.drops)
-                r.useTarget = r.useTarget == 1
-                r.policeCall = r.policeCall == 1
+                r.useTarget = r.useTarget == 1 or r.useTarget == "1" or r.useTarget == true
+                r.policeCall = r.policeCall == 1 or r.policeCall == "1" or r.policeCall == true
                 r.heading = tonumber(r.heading) or 0.0
                 robberies[r.label] = r
             end
@@ -52,9 +52,22 @@ RegisterNetEvent('dev_robbery:deleteRobbery', function(label)
     TriggerClientEvent('dev_robbery:removeRobbery', -1, label)
 end)
 
--- Dá a recompensa configurada ao jogador
-RegisterNetEvent('dev_robbery:giveReward', function(item, amount)
-    exports.ox_inventory:AddItem(source, item, amount)
+-- Dá a recompensa configurada ao jogador verificando a distancia.
+RegisterNetEvent('dev_robbery:giveReward', function(item, amount, label)
+    local src = source
+    local ped = GetPlayerPed(src)
+    local playerCoords = GetEntityCoords(ped)
+
+    local robbery = robberies[label]
+    if not robbery then return end
+
+    local dist = #(playerCoords - vector3(robbery.coords.x, robbery.coords.y, robbery.coords.z))
+    if dist > 10.0 then
+        print(("[%s] tentou pegar recompensa do roubo '%s' longe demais!"):format(GetPlayerName(src), label))
+        return
+    end
+
+    exports.ox_inventory:AddItem(src, item, amount)
 end)
 
 -- Comando para abrir o menu de gerenciamento de roubos
