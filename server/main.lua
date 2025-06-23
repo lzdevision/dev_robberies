@@ -52,6 +52,7 @@ RegisterNetEvent('dev_robbery:deleteRobbery', function(label)
     TriggerClientEvent('dev_robbery:removeRobbery', -1, label)
 end)
 
+-- Fix Exploit
 -- Dá a recompensa configurada ao jogador verificando a distancia.
 RegisterNetEvent('dev_robbery:giveReward', function(item, amount, label)
     local src = source
